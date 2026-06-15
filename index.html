@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS スンバイ風クロック</title>
+    <style>
+        /* 全体の設定 */
+        body {
+            margin: 0;
+            padding: 0 5vw; /* 左右に少し余白を作る */
+            background-color: #000000;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        /* 時計と情報を横並びにするコンテナ */
+        .standby-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 900px; /* 広がりすぎないように制限 */
+        }
+
+        /* 巨大なデジタル時計部分 */
+        .time-display {
+            font-size: 32vw; /* 画面幅に合わせて限界まで大きく */
+            font-weight: 800; /* 本物に近い極太フォント */
+            line-height: 0.9;
+            letter-spacing: -0.03em;
+            
+            /* グラデーション文字の実装 */
+            background: linear-gradient(to bottom, #a3e9df 0%, #76bbf7 50%, #7186ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 右側の情報（日付・気温）を入れるボックス */
+        .info-sidebar {
+            margin-left: 4vw; /* 時計との間隔 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            min-width: 120px;
+        }
+
+        /* 日付と気温の共通スタイル */
+        .info-text {
+            font-size: 3.5vw;
+            font-weight: 600;
+            line-height: 1.3;
+            letter-spacing: 0.05em;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="standby-container">
+        <div class="time-display" id="time">0:00</div>
+
+        <div class="info-sidebar">
+            <div class="info-text" id="date">15日(月)</div>
+            <div class="info-text" id="weather">28°C</div>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+
+            // --- 時刻の取得 ---
+            const hours = now.getHours(); // スンバイ風に、時は1桁ならそのまま表示（03ではなく3）
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            // 画面に反映
+            document.getElementById('time').textContent = `${hours}:${minutes}`;
+
+            // --- 日付の取得 ---
+            const date = now.getDate();
+            const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+            const day = dayNames[now.getDay()];
+            
+            // 画面に反映
+            document.getElementById('date').textContent = `${date}日(${day})`;
+        }
+
+        // 起動時に実行
+        updateClock();
+        // 1秒ごとに更新
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
