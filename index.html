@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iOS スンバイ風クロック</title>
+    <title>iOS スタンバイ風クロック</title>
     <style>
         /* 全体の設定 */
         body {
             margin: 0;
-            padding: 0 5vw; /* 左右に少し余白を作る */
+            padding: 0 5vw;
             background-color: #000000;
             color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            
+            /* ─── 修正ポイント①：フォントの優先順位を修正 ─── */
+            /* iPhoneの標準の綺麗なフォント（SF Pro / Helvetica）を最優先にします */
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Segoe UI", sans-serif;
+            
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,17 +30,17 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            max-width: 900px; /* 広がりすぎないように制限 */
+            max-width: 900px;
         }
 
         /* 巨大なデジタル時計部分 */
         .time-display {
-            font-size: 32vw; /* 画面幅に合わせて限界まで大きく */
-            font-weight: 800; /* 本物に近い極太フォント */
+            font-size: 32vw;
+            font-weight: 800; /* 極太に設定 */
             line-height: 0.9;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.05em; /* 文字の間隔を少し詰めて本物に近づける */
             
-            /* グラデーション文字の実装 */
+            /* グラデーション文字 */
             background: linear-gradient(to bottom, #a3e9df 0%, #76bbf7 50%, #7186ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -44,7 +48,7 @@
 
         /* 右側の情報（日付・気温）を入れるボックス */
         .info-sidebar {
-            margin-left: 4vw; /* 時計との間隔 */
+            margin-left: 4vw;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -55,9 +59,9 @@
         /* 日付と気温の共通スタイル */
         .info-text {
             font-size: 3.5vw;
-            font-weight: 600;
-            line-height: 1.3;
-            letter-spacing: 0.05em;
+            font-weight: 700;
+            line-height: 1.4;
+            letter-spacing: 0.02em;
             color: #ffffff;
         }
     </style>
@@ -77,8 +81,14 @@
         function updateClock() {
             const now = new Date();
 
-            // --- 時刻の取得 ---
-            const hours = now.getHours(); // スンバイ風に、時は1桁ならそのまま表示（03ではなく3）
+            // ─── 修正ポイント②：12時間表記への変換 ───
+            let hours = now.getHours();
+            
+            // 12時間制に変換（例: 15時は 3時 にする）
+            hours = hours % 12;
+            // 0時の場合は 12 にする（夜の12時、昼の12時対策）
+            hours = hours ? hours : 12; 
+
             const minutes = String(now.getMinutes()).padStart(2, '0');
             
             // 画面に反映
