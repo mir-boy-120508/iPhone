@@ -12,9 +12,9 @@
             background-color: #000000;
             color: #ffffff;
             
-            /* ─── 修正ポイント①：フォントの優先順位を修正 ─── */
-            /* iPhoneの標準の綺麗なフォント（SF Pro / Helvetica）を最優先にします */
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Segoe UI", sans-serif;
+            /* ─── 修正ポイント：フォントにRounded（丸文字）を最優先で指定 ─── */
+            /* Apple製品で丸文字になる「SF Pro Rounded」を先頭に配置し、汎用的な丸ゴシックも追加しました */
+            font-family: "SF Pro Rounded", ui-rounded, "Hiragino Maru Gothic ProN", "ヒラギノ丸ゴ ProN W4", "Kosugi Maru", "Segoe UI", sans-serif;
             
             display: flex;
             justify-content: center;
@@ -38,7 +38,10 @@
             font-size: 32vw;
             font-weight: 800; /* 極太に設定 */
             line-height: 0.9;
-            letter-spacing: -0.05em; /* 文字の間隔を少し詰めて本物に近づける */
+            letter-spacing: -0.02em; /* 丸文字に合わせて間隔をほんの少し微調整 */
+            
+            /* 数字の幅を一定にしてコロンの位置がガタつかないようにする設定 */
+            font-variant-numeric: tabular-nums;
             
             /* グラデーション文字 */
             background: linear-gradient(to bottom, #a3e9df 0%, #76bbf7 50%, #7186ff 100%);
@@ -81,12 +84,10 @@
         function updateClock() {
             const now = new Date();
 
-            // ─── 修正ポイント②：12時間表記への変換 ───
             let hours = now.getHours();
             
-            // 12時間制に変換（例: 15時は 3時 にする）
+            // 12時間制に変換
             hours = hours % 12;
-            // 0時の場合は 12 にする（夜の12時、昼の12時対策）
             hours = hours ? hours : 12; 
 
             const minutes = String(now.getMinutes()).padStart(2, '0');
